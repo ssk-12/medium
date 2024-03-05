@@ -20,7 +20,7 @@ userRouter.post('/signup', async (c) => {
     const body = await c.req.json();
     const { success } = signupInput.safeParse(body);
     if(!success){
-        return c.json("incorrect inputs")
+        return c.json({message:"incorrect inputs"})
     }
 
     try {
@@ -54,7 +54,7 @@ userRouter.post('/signin', async (c) => {
     const { success } = signinInput.safeParse(body);
 
     if(!success){
-        return c.json("incorrect inputs")
+        return c.json({message:"incorrect inputs"})
     }
 
     const user = await prisma.user.findUnique({

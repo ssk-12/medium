@@ -1,17 +1,21 @@
-import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { Quote } from "./pages/Quote";
-import { Signin } from "./pages/Signin";
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Auth } from './pages/Auth'
+// import { Blog } from './pages/Blog'
 
-export default function App() {
+function App() {
+
   return (
-    <Router>
-      <div className="lg:grid grid-cols-2">
-        <Signin/>
-        <div className="invisible lg:visible">
-          <Quote/>
-        </div>
-      </div>
-    </Router>
-  );
+    <>
+      <BrowserRouter>
+        <Routes>
+        <Route path="/" element={<Auth/>} />
+          <Route path="/signup" element={<Auth auth="signup"/>} />
+          <Route path="/signin" element={<Auth />} />
+          {/* <Route path="/blog/:id" element={<Blog />} /> */}
+        </Routes>
+      </BrowserRouter>
+    </>
+  )
 }
+
+export default App
