@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -51,7 +51,7 @@ export function Signup() {
             </div>
             <div className="mt-1 text-slate-500 font-medium">
                 have an account?{" "}
-                <Link to="/login" className="underline text-zinc-500 hover:text-zinc-700">Sign in</Link>
+                <Link to="/signin" className="underline text-zinc-500 hover:text-zinc-700">Sign in</Link>
             </div>
             <form className="w-full flex flex-col items-center justify-center" onSubmit={handleSubmit}>
                 <div className="mt-4">

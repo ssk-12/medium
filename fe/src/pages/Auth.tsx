@@ -1,4 +1,3 @@
-import React from 'react';
 import { Signup } from "./Signup";
 import { Signin } from "./Signin"; // Make sure you have this import
 import { Quote } from './Quote';
@@ -9,7 +8,7 @@ export function Auth(props:any) {
             <div>
                 {props.auth === "signup" ? <Signup /> : <Signin />}
             </div>
-            <div>
+            <div className="hidden lg:block">
                 <Quote/>
             </div>
         </div>
