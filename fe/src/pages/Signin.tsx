@@ -1,36 +1,72 @@
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom'; 
+import axios from 'axios';
 
-export function Signin(){
-    return <div className="h-screen w-full m-auto bg-slate-100 flex flex-col justify-center items-center">
-        <div className="text-3xl font-extrabold">
-            Create an account
-        </div>
-        <div className="mt-1 text-slate-500 font-medium">
-            Already have an account?{" "}
-            <Link to="/login" className="text-blue-500 hover:text-blue-600">Login</Link>
-        </div>
-        <div className="w-full flex flex-col items-center justify-center">
-            <div className="mt-4">
-                <div className="font-medium">Username</div>
-                <div className="mt-1">
-                    <input className="rounded-sm p-1 border-zinc-500 w-[350px]" type="text" placeholder="Enter your username"/>
-                </div>
+export function Signin() {
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    // const [message, setMessage] = useState('');
+
+    const navigate = useNavigate(); 
+    const handleSubmit = async (e:any) => {
+        e.preventDefault(); 
+
+        try {
+            const response = await axios.post('https://be.ullegadda-srikanta.workers.dev/api/v1/user/signup', {
+                name: username,
+                email,
+                password
+            });
+
+            
+            const { jwt } = response.data;
+            // setMessage(response.data.error);
+
+            
+            localStorage.setItem('token', jwt);
+
+            
+            navigate('/dashboard'); 
+
+        } catch (error:any) {
+            console.error('Signup error:', error.response?.data || error.message);
+            // setMessage(error.message);
+        }
+    };
+
+    return (
+        <div className="h-screen w-full m-auto bg-slate-100 flex flex-col justify-center items-center">
+            <div className="text-3xl font-extrabold">
+                Login to account
             </div>
-            <div className="mt-4">
-                <div className="font-medium">Email</div>
-                <div className="mt-1">
-                    <input className="rounded-sm p-1 border-zinc-500 w-[350px]" type="email" placeholder="Enter your email"/>
-                </div>
+            <div className="mt-1 text-slate-500 font-medium">
+                have an account?{" "}
+                <Link to="/login" className="underline text-zinc-500 hover:text-zinc-700">Signup</Link>
             </div>
+            <form className="w-full flex flex-col items-center justify-center" onSubmit={handleSubmit}>
             <div className="mt-4">
-                <div className="font-medium">password</div>
-                <div className="mt-1">
-                    <input className="rounded-sm p-1 border-zinc-500 w-[350px]" type="password" placeholder="Enter your password"/>
+                    <div className="font-medium">Username</div>
+                    <div className="mt-1">
+                        <input className="rounded-sm p-1 border-zinc-500 w-[350px]" type="text" placeholder="Enter your name"  onChange={(e) => setUsername(e.target.value)} />
+                    </div>
                 </div>
-            </div>
+                <div className="mt-4">
+                    <div className="font-medium">Email</div>
+                    <div className="mt-1">
+                        <input className="rounded-sm p-1 border-zinc-500 w-[350px]" type="email" placeholder="Enter your email"  onChange={(e) => setEmail(e.target.value)} />
+                    </div>
+                </div>
+                <div className="mt-4">
+                    <div className="font-medium">Password</div>
+                    <div className="mt-1">
+                        <input className="rounded-sm p-1 border-zinc-500 w-[350px]" type="password" placeholder="Enter your password" onChange={(e) => setPassword(e.target.value)} />
+                    </div>
+                </div>
+                <div className="mt-6">
+                    <button className="bg-black text-white rounded-md p-1 w-[350px]" type="submit">Sign Up</button>
+                </div>
+            </form>
         </div>
-        <div className="mt-6">
-            <button className="bg-black text-white rounded-md p-1 w-[350px]">Sign Up</button>
-        </div>
-    </div>
+    );
 }

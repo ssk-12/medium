@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import { sign } from "hono/jwt";
-import { signinInput, signupInput } from "@ssk2003/medium-common";
+
 export const userRouter = new Hono<{
     Bindings: {
         DATABASE_URL: string;
@@ -16,12 +16,6 @@ userRouter.post('/signup', async (c) => {
     }).$extends(withAccelerate());
 
     const body = await c.req.json();
-    const {success} = signupInput.safeParse(body);
-    console.log("success",success);
-    if(!success){
-        c.status(411);
-        c.json({"msg":"incorrect inputs"})
-    }
 
     try {
         const user = await prisma.user.create({
@@ -51,11 +45,6 @@ userRouter.post('/signin', async (c) => {
     }).$extends(withAccelerate());
 
     const body = await c.req.json();
-    const {success} = signinInput.safeParse(body);
-    if(!success){
-        c.status(411);
-        c.json({"msg":"incorrect inputs"})
-    }
     const user = await prisma.user.findUnique({
         where: {
             email: body.email,
@@ -72,14 +61,3 @@ userRouter.post('/signin', async (c) => {
     return c.json({ jwt });
 })
 
-// userRouter.get("/sasa", (c)=>{
-//     return c.json({
-//         msg : "userRouyer"
-//     })
-// })
-
-// userRouter.get("/", (c)=>{
-//     return c.json({
-//         msg : "userRouyer"
-//     })
-// })
