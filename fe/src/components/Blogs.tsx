@@ -67,19 +67,19 @@ export function Blogs() {
     };
 
     return (
-        <div className="m-8 p-8 rounded-lg ">
-            <div className="grid grid-cols-3 gap-4">
-                <div className="col-span-2">
+        <div className="m-4 md:m-6 lg:m-8 p-4 md:p-6 lg:p-8 rounded-lg">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="md:col-span-2 lg:col-span-2">
                     <div className="flex flex-col gap-2">
-                        <div className="text-4xl font-extrabold max-w-lg">
+                        <div className="text-2xl md:text-3xl lg:text-4xl font-extrabold max-w-lg">
                             {post.title}
                         </div>
-                        <div className="max-w-[720px] text-md text-slate-800">
+                        <div className="text-sm md:text-md lg:text-md text-slate-800">
                             {post.content}
                         </div>
                     </div>
                 </div>
-                <div className="ml-9">
+                <div className="mt-4 md:mt-0 md:ml-9">
                     <div>Author</div>
                     <div className="flex items-center gap-2 m-4">
                         <div className="profile-icon bg-zinc-400 rounded-full h-6 w-6 flex items-center justify-center text-black text-sm font-light">
@@ -92,5 +92,6 @@ export function Blogs() {
                 </div>
             </div>
         </div>
+
     );
 }
