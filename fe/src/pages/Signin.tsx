@@ -24,6 +24,7 @@ export function Signin() {
 
             if (jwt) {
                 localStorage.setItem('token', jwt);
+                localStorage.setItem('username', email);
                 setMessage("login success")
                 navigate('/dashboard');
             } else {
