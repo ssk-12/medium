@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Appbar } from '../Appbar';
 
 type Author = {
   name: string | null;
@@ -52,7 +51,6 @@ export const BlogPostDetails: React.FC = () => {
 
   return (
     <div>
-      <Appbar />
       <div className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-3">{post.title}</h1>
         <p className="text-gray-600 mb-6">Author: {post.author?.name || 'Anonymous'}</p>

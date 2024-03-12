@@ -22,9 +22,9 @@ export function Signin() {
 
             console.log(message);
 
-            if (jwt) {
+            if (jwt) {localStorage.setItem('username', email);
                 localStorage.setItem('token', jwt);
-                localStorage.setItem('username', email);
+                
                 setMessage("login success")
                 navigate('/dashboard');
             } else {

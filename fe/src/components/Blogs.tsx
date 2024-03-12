@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Appbar } from '../Appbar';
+
 
 type Author = {
     name: string | null;
@@ -58,7 +58,6 @@ export function Blogs() {
     if (!post) {
         return (
             <>
-                <Appbar />
                 <div className="flex items-center justify-center h-screen font-bold ">
                     <div>Loading...</div>
                 </div>

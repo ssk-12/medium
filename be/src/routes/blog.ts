@@ -13,21 +13,47 @@ export const blogRouter = new Hono<{
 }>();
 
 blogRouter.use('/*', async (c, next) => {
-	console.log("reached middleware");
-	const jwt = c.req.header('Authorization');
-	if (!jwt) {
-		c.status(401);
-		return c.json({ error: "unauthorized" });
-	}
-	const token = jwt.split(' ')[1];
-	const payload = await verify(token, c.env.JWT_SECRET);
-	if (!payload) {
-		c.status(401);
-		return c.json({ error: "unauthorized" });
-	}
-	c.set('userId', payload.id);
-	await next()
-})
+    try {
+        
+        const prisma = new PrismaClient({
+            datasourceUrl: c.env?.DATABASE_URL,
+        }).$extends(withAccelerate());
+
+        const jwt = c.req.header('Authorization');
+        if (!jwt) {
+            c.status(401);
+            return c.json({ error: "Unauthorized: No token provided." });
+        }
+        
+        const token = jwt.split(' ')[1];
+        const payload = await verify(token, c.env.JWT_SECRET);
+        if (!payload) {
+            c.status(401);
+            return c.json({ error: "Unauthorized: Invalid token." });
+        }
+
+        const user = await prisma.user.findUnique({
+            where: {
+                id: payload.id
+            }
+        });
+
+        if (!user) {
+            c.status(404);
+            return c.json({ error: "User not found." });
+        }
+
+        c.set('userId', user.id);
+        await next();
+    } catch (error) {
+        
+        console.error('Authentication error:', error);
+
+        
+        c.status(500);
+        return c.json({ error: "An internal server error occurred." });
+    }
+});
 
 
 blogRouter.post('/create', async (c) => {
@@ -57,6 +83,40 @@ blogRouter.get('bulk', async (c) => {
 			datasourceUrl: c.env?.DATABASE_URL,
 		}).$extends(withAccelerate());
 		const posts = await prisma.post.findMany({
+			where:{
+				published: true
+			},
+			select: {
+				id: true,
+				title: true,
+				content: true,
+				author: {
+					select: {
+						name: true,
+					},
+				},
+			},
+		});
+
+		return c.json(posts);
+	} catch (error) {
+		console.error('Failed to fetch posts:', error);
+		return c.json({ error: 'Internal server error' }, 500);
+	}
+});
+
+blogRouter.post('userblogs', async (c) => {
+	try {
+		const prisma = new PrismaClient({
+			datasourceUrl: c.env?.DATABASE_URL,
+		}).$extends(withAccelerate());
+		const userId = c.get('userId');
+		const body = await c.req.json();
+		const posts = await prisma.post.findMany({
+			where:{
+				authorId:userId,
+				published: body.published
+			},
 			select: {
 				id: true,
 				title: true,
@@ -77,15 +137,13 @@ blogRouter.get('bulk', async (c) => {
 });
 
 
-blogRouter.put('/blog', async (c) => {
+blogRouter.put('/publishblog', async (c) => {
 	const userId = c.get('userId');
 	const prisma = new PrismaClient({
 		datasourceUrl: c.env?.DATABASE_URL,
 	}).$extends(withAccelerate());
 
 	const body = await c.req.json();
-
-	console.log("userId", userId);
 
 	try {
 		const updated = await prisma.post.update({
@@ -94,8 +152,7 @@ blogRouter.put('/blog', async (c) => {
 				authorId: userId
 			},
 			data: {
-				title: body.title,
-				content: body.content
+				published: true
 			}
 		});
 
@@ -103,8 +160,6 @@ blogRouter.put('/blog', async (c) => {
 	} catch (error) {
 		return c.json(error);
 	}
-
-
 });
 
 blogRouter.get('/:id', async (c) => {

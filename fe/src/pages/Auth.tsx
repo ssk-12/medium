@@ -1,5 +1,5 @@
 import { Signup } from "./Signup";
-import { Signin } from "./Signin"; // Make sure you have this import
+import { Signin } from "./Signin"; 
 import { Quote } from './Quote';
 
 export function Auth(props:any) {

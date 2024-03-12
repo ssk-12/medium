@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import { Appbar } from '../Appbar';
 
 
 type BlogPost = {
@@ -49,7 +48,7 @@ export const BlogPosts: React.FC = () => {
   if (isLoading) {
     return (
       <>
-        <Appbar />
+        {/* <Appbar /> */}
         <div className="flex items-center justify-center h-screen font-bold ">
           <div>Loading...</div>
         </div>
@@ -61,7 +60,7 @@ export const BlogPosts: React.FC = () => {
   if (posts.length === 0) {
     return <>
 
-      <Appbar />
+      {/* <Appbar /> */}
       <div className=" flex items-center justify-center font-bold" style={{ height: `calc(100vh - 104px)` }}>
         No Posts Available
       </div>
@@ -71,19 +70,23 @@ export const BlogPosts: React.FC = () => {
 
   return (
     <div>
-      <Appbar />
+      {/* <Appbar /> */}
       <div>
         {posts.map((post) => (
           <div key={post.id} className="m-4 md:m-6 lg:m-8 p-4 md:p-6 lg:p-8 rounded-lg border-2">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="md:col-span-2 lg:col-span-2">
                 <div className="flex flex-col gap-2">
-                  <Link to={`blog/${post.id}`} className="text-2xl md:text-3xl lg:text-4xl font-extrabold max-w-lg">
+                  <Link to={`/blog/${post.id}`} className="text-2xl md:text-3xl lg:text-4xl font-extrabold max-w-lg">
                     {post.title}
                   </Link>
                   <div className="text-sm md:text-md lg:text-md text-slate-800">
                     {post.content.length > 200 ? `${post.content.substring(0, 200)}...` : post.content}
                   </div>
+                  <div>
+                    estimated read time : {post.content.length / 200 < 1 ? "less than a minute" : `${(post.content.length / 200).toFixed(1)} minute(s)`}
+                  </div>
+
                 </div>
               </div>
               <div className="mt-4 md:mt-0 md:ml-9">
